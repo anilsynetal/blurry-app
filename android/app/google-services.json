@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "180241236164",
+    "project_id": "soulfirst-40162",
+    "storage_bucket": "soulfirst-40162.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:180241236164:android:8f8aed61dafeb827604991",
+        "android_client_info": {
+          "package_name": "com.socialapp.soulfirst"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "180241236164-4b165l6o5qjmim1i2j3lda56kn7r0v7j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.socialapp.soulfirst",
+            "certificate_hash": "5dd41acfe3dc23e4b585a1a588bff3479e128170"
+          }
+        },
+        {
+          "client_id": "180241236164-65153r2ocnh599jj0a1co383eniuj683.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA88VXtIT6oUWYQ6KX6APuc_b4Jvcppajs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "180241236164-65153r2ocnh599jj0a1co383eniuj683.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "180241236164-bv6akd7k3baetfd069ev8onmvnj33mr9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.socialapp.soulfirst"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
