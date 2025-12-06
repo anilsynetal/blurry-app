@@ -24,6 +24,7 @@ import '../../../../core/utils/export.dart';
 import '../../../bottom_bar/bottom_bar.dart';
 import '../../../widgets/confirmation_dialog.dart';
 import '../../../widgets/credit_widget.dart';
+import '../../../widgets/time_config.dart';
 import '../../unblur/model/unblur_access_status.dart';
 import '../../unblur/view/unblur_confirmation_screen.dart';
 import '../../your_match/controller/your_match_controller.dart';
@@ -64,7 +65,7 @@ class ChatController extends GetxController with GetTickerProviderStateMixin {
 
   // Pagination
   int page = 1;
-  final int limit = 20;
+  final int limit = 10;
   final hasMore = true.obs;
   final isLoadMoreRunning = false.obs;
 
@@ -147,8 +148,7 @@ class ChatController extends GetxController with GetTickerProviderStateMixin {
   }
 
   void _scrollListener() {
-    if (scrollController.hasClients &&
-        scrollController.position.pixels >= scrollController.position.maxScrollExtent - 100) {
+    if (scrollController.hasClients && scrollController.position.pixels >= scrollController.position.maxScrollExtent - 100) {
       loadMoreMessages();
     }
   }
@@ -461,7 +461,7 @@ class ChatController extends GetxController with GetTickerProviderStateMixin {
   Future<void> loadMessages({bool loadMore = false}) async {
     try {
       if (loadMore) {
-        if (isLoadMoreRunning.value || !hasMore.value) return;
+
         isLoadMoreRunning(true);
       } else {
         isLoading(true);
@@ -470,30 +470,25 @@ class ChatController extends GetxController with GetTickerProviderStateMixin {
         messages.clear();
       }
 
-      // First load from local database
-      // ... (existing local db code commented out) ...
-
       // Then fetch from server
       if (chatId.value != "") {
-         await repository.getChatMessage(chatId: chatId.toString(), page: page, limit: limit).then((value) {
-            var fetchedMessages = value.data?.chat?.messages ?? [];
-            
-            if (fetchedMessages.length < limit) {
-              hasMore.value = false;
-            }
+        await repository.getChatMessage(chatId: chatId.toString(), page: page,).then((value) {
+          var fetchedMessages = value.data?.chat?.messages?.reversed ?? [];
+          hasMore.value = value.data?.pagination?.hasMore ?? false;
 
-            if (loadMore) {
-              // Prepend older messages
-              messages.insertAll(0, fetchedMessages);
-            } else {
-              messages.value = fetchedMessages;
-              _scrollToBottom();
-            }
-            
-            if (fetchedMessages.isNotEmpty) {
-               page++;
-            }
-          });
+          print("hasMore.value value ${hasMore.value}");
+
+          if (loadMore) {
+            // Prepend older messages at the beginning
+            messages.insertAll(0, fetchedMessages);
+          } else {
+            // For initial load, set all messages
+            messages.value = fetchedMessages.toList();
+            _scrollToBottom();
+          }
+          // Increment page for next load
+          page++;
+        });
       }
     } catch (e) {
       print("Catch error is $e");
@@ -504,7 +499,10 @@ class ChatController extends GetxController with GetTickerProviderStateMixin {
   }
 
   Future<void> loadMoreMessages() async {
-    await loadMessages(loadMore: true);
+    if(hasMore.value && !isLoadMoreRunning.value ){
+      await loadMessages(loadMore: true);
+    }
+
   }
 
   Future<void> sendMessage() async {
@@ -521,7 +519,7 @@ class ChatController extends GetxController with GetTickerProviderStateMixin {
         id: tempId,
         sender: senderUser.id,
         content: content,
-        timestamp: DateTime.now(),
+        timestamp: TimeZoneHelper.nowNetherlands(),
         messageType: "text",
         isRead: false,
       );
@@ -620,7 +618,7 @@ class ChatController extends GetxController with GetTickerProviderStateMixin {
   }
 
   String formatTime(DateTime dateTime) {
-    final now = DateTime.now();
+    final now = TimeZoneHelper.nowNetherlands();
     final difference = now.difference(dateTime);
 
     if (difference.inDays > 0) {
@@ -753,7 +751,7 @@ class ChatController extends GetxController with GetTickerProviderStateMixin {
         id: tempId,
         sender: senderUser.id,
         content: 'Voice message',
-        timestamp: DateTime.now(),
+        timestamp: TimeZoneHelper.nowNetherlands(),
         messageType: "voice",
         isRead: false,
         voiceDuration: durationSec,

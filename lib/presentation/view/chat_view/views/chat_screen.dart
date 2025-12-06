@@ -77,7 +77,6 @@ class ChatScreen extends GetView<ChatController> {
                           ),
                         );
                       }
-
                       return ListView.builder(
                         reverse: true,
                         controller: controller.scrollController,
@@ -88,23 +87,50 @@ class ChatScreen extends GetView<ChatController> {
                         itemCount: controller.messages.length + (controller.hasMore.value ? 1 : 0),
                         itemBuilder: (context, index) {
                           if (index == controller.messages.length) {
-                             return Center(
+                            return Center(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: CircularProgressIndicator(color: Colors.white),
                               ),
                             );
                           }
-                          // Reverse index mapping: Last element in list is index 0 in UI
-                          final msgIndex = controller.messages.length - 1 - index;
-                          final message = controller.messages[msgIndex];
+
+                          // Since we're using reverse: true, we need to get the message from the end of the list
+                          final message = controller.messages[controller.messages.length - 1 - index];
                           return ChatMessageBubble(
                             message: message,
-                             isLast : index == 0,
+                            isLast: index == 0,
                             formatTime: controller.formatTime,
                           );
                         },
                       );
+                      // return ListView.builder(
+                      //   reverse: true,
+                      //   controller: controller.scrollController,
+                      //   padding: EdgeInsets.symmetric(
+                      //     horizontal: 12,
+                      //     vertical: 0,
+                      //   ),
+                      //   itemCount: controller.messages.length + (controller.hasMore.value ? 1 : 0),
+                      //   itemBuilder: (context, index) {
+                      //     if (index == controller.messages.length) {
+                      //        return Center(
+                      //         child: Padding(
+                      //           padding: const EdgeInsets.all(8.0),
+                      //           child: CircularProgressIndicator(color: Colors.white),
+                      //         ),
+                      //       );
+                      //     }
+                      //     // Reverse index mapping: Last element in list is index 0 in UI
+                      //     final msgIndex = controller.messages.length - 1 - index;
+                      //     final message = controller.messages[msgIndex];
+                      //     return ChatMessageBubble(
+                      //       message: message,
+                      //        isLast : index == 0,
+                      //       formatTime: controller.formatTime,
+                      //     );
+                      //   },
+                      // );
                     }),
                   ),
                   // Message input field

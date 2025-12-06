@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../../../widgets/time_config.dart';
 import '../../plan/model/plan_model.dart';
 
 class ChatDetailsResponseModel {
@@ -292,7 +293,7 @@ class ChatMessage {
     sender: json["sender"],
     content: json["content"],
     messageType: json["messageType"],
-    timestamp: json["timestamp"] == null ? null : DateTime.parse(json["timestamp"]),
+    timestamp: json["timestamp"] == null ? null : TimeZoneHelper.fromUtcString(json['timestamp']),
     isRead: json["isRead"],
     readAt: json["readAt"],
     id: json["_id"],

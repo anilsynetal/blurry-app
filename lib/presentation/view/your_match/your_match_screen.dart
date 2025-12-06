@@ -597,7 +597,8 @@ String timeAgo(DateTime apiDate) {
 
 
   // apiDate must be treated as UTC
- final now  = TimeZoneHelper.getNetherlandsDateTime();
+ final now  = TimeZoneHelper.nowNetherlands();
+
 
   final Duration diff = now.difference(apiDate);
 

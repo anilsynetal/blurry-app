@@ -638,7 +638,7 @@ class ApiRepository {
   }
 
 
-  Future<ChatDetailsResponseModel> getChatMessage({int page = 1, int limit = 10,required String chatId}) async {
+  Future<ChatDetailsResponseModel> getChatMessage({int page = 1, int limit = 50,required String chatId}) async {
     final response = await dioClient.dio.get(
       "app/v1/chats/$chatId/messages?page=$page&limit=$limit&markAsRead=true",
       options: Options(
