@@ -229,8 +229,7 @@ class ChatController extends GetxController with GetTickerProviderStateMixin {
 
     socketService.socket?.on('chat_blocked', _onChatBlocked);
     socketService.socket?.on('chat_unblocked', _onChatUnblocked);
-    socketService.socket?.on(
-      'unblur_request_received',
+    socketService.socket?.on('unblur_request_received',
       _onUnblurRequestReceived,
     );
     socketService.socket?.on('unblur_request_sent', _onUnblurRequestSent);

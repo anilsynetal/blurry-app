@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import '../../core/services/binding.dart';
 import '../../core/theme/typography.dart';
 import '../../core/utils/animate_toast.dart';
+import '../../presentation/view/auth/login_screen.dart';
 
 
 class LoggingInterceptor extends dio.Interceptor {
@@ -75,7 +78,10 @@ class LoggingInterceptor extends dio.Interceptor {
         break;
 
       case 401:
-        errorMessage = "${response.data['message'] ?? "Unauthorized: Please log in again"}";
+        GetStorage().erase();
+        Get.off(()=>LoginScreen(),binding: LoginBinding());
+
+        // errorMessage = "${response.data['message'] ?? "Unauthorized: Please log in again"}";
         break;
 
         break;

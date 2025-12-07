@@ -62,6 +62,7 @@ class YourMatchController extends GetxController {
     });
 
     socketService.socket?.on('match_request_accepted', (data) {
+      print("New match_request_accepted data is $data");
       try {
         if(data["data"]["match"]["requestee"]["_id"].toString() != "${GetStorage().read(userDataKey)["_id"].toString()}" ){
           print("New match_request_accepted data is $data");
@@ -73,6 +74,7 @@ class YourMatchController extends GetxController {
             matchesList[index] = updatedMatch;
           } else {
             matchesList.insert(0, updatedMatch);
+
           }
           matchesList.refresh();
         }
