@@ -91,6 +91,19 @@ class PlanSwitchScreen extends StatelessWidget {
                                       ? buildShimmerLoading():
                                   Column(
                                     children: [
+                                      if (controller.plans.isEmpty)
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 50,bottom: 50),
+                                          child: Center(
+                                            child: Text(
+                                              "No Plans Available",
+                                              style: TextStyles.bodyMedium.copyWith(
+                                                color: AppThemeNotifier.textPrimary,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      else
                                       ...List.generate(controller.plans.length, (index) {
                                         return Padding(
                                           padding: const EdgeInsets.only(bottom: 12),

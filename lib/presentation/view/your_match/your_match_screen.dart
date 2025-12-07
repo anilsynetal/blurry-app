@@ -298,11 +298,13 @@ class YourMatchScreen extends StatelessWidget {
 
                                                 ],
                                               ):
-                                              Row(
+                                              matchData.message == null ?2.height:      Row(
                                                 children: [
                                                   SizedBox(
                                                     width: Get.width*0.6,
-                                                    child: Text("${matchData.message}",style: TextStyles.bodySmall.copyWith(
+                                                    child:
+
+                                                    Text("${matchData.message}",style: TextStyles.bodySmall.copyWith(
                                                       color: AppThemeNotifier.textDisabled,fontSize: 14,
                                                     ),maxLines: 2,
                                                       overflow: TextOverflow.ellipsis,

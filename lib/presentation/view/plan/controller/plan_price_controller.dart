@@ -62,6 +62,7 @@ class PricingController extends GetxController {
       Stripe.publishableKey = publishableKey.value;
       Stripe.merchantIdentifier = "IN";
     });
+
   }
 
   Future<void> fetchPlans({bool loadMore = false}) async {

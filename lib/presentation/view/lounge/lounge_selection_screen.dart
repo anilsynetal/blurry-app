@@ -107,7 +107,17 @@ class LoungeSelectionScreen extends GetView<LoungeController> {
                   )
                           :
                       // Grid of lounge cards (2 columns)
-                      GridView.builder(
+                      controller.lounges.isEmpty
+                        ? Padding(
+                          padding: const EdgeInsets.only(top: 100,bottom: 100),
+                          child: Text(
+                            "No Lounges Found",
+                            style: TextStyles.bodyMedium.copyWith(
+                              color: AppThemeNotifier.textPrimary,
+                            ),
+                          ),
+                        )
+                        : GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

@@ -75,8 +75,20 @@ class PricingScreen extends GetView<PricingController> {
                       // Pricing Plans
                       controller.isLoading.value
                           ? buildShimmerLoading():
-                       Column(
-                         children: [
+                       controller.plans.isEmpty
+                         ? Padding(
+                           padding: const EdgeInsets.only(top: 50),
+                           child: Center(
+                             child: Text(
+                               "No Plans Available",
+                               style: TextStyles.bodyMedium.copyWith(
+                                 color: AppThemeNotifier.textPrimary,
+                               ),
+                             ),
+                           ),
+                         )
+                         : Column(
+                             children: [
                            ...List.generate(controller.plans.length, (index) {
                              return Padding(
                                padding: const EdgeInsets.only(bottom: 12),
