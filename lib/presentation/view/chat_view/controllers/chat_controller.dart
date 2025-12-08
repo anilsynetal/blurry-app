@@ -154,7 +154,7 @@ class ChatController extends GetxController with GetTickerProviderStateMixin {
   }
 
   void _refreshSocketListeners() {
-    _removeSocketListeners();
+    // _removeSocketListeners();
     _setupSocketListeners();
     joinChat();
   }
@@ -174,7 +174,7 @@ class ChatController extends GetxController with GetTickerProviderStateMixin {
     _recordingTimer?.cancel();
     _typingTimer?.cancel();
 
-    _removeSocketListeners();
+    // _removeSocketListeners();
 
     super.onClose();
   }
@@ -357,94 +357,50 @@ class ChatController extends GetxController with GetTickerProviderStateMixin {
     );
   }
 
-  bool isUnblurRequestDialogOpen = false;
+  bool _isUnblurDialogShowing = false;
 
-  void _onUnblurRequestReceived(data) {
-    print("unblur_request_received request received success $data");
+  Future<void> _onUnblurRequestReceived(dynamic data) async {
+    if (_isUnblurDialogShowing) {
+      print("Unblur dialog already shown, ignoring duplicate");
+      return;
+    }
 
-    if (isUnblurRequestDialogOpen) return;
+    _isUnblurDialogShowing = true;
 
-    isUnblurRequestDialogOpen = true;
-
-    showCupertinoDialog(
-      context: Get.overlayContext!,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          title: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  "Unblur Request Received",
-                  style: TextStyles.headlineMedium.copyWith(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: CupertinoColors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+    try {
+      await showCupertinoDialog(
+        context: Get.overlayContext!,
+        barrierDismissible: false,
+        builder: (_) => WillPopScope(
+          onWillPop: () async => false,
+          child: CupertinoAlertDialog(
+            title: Text("Unblur Request Received"),
+            content: Text("Your partner wants to see your photo clearly."),
+            actions: [
+              CupertinoDialogAction(
+                child: Text("Decline", style: TextStyle(color: Colors.red)),
+                onPressed: () {
+                  declineUnBlurRequest(data["requestId"]);
+                  Get.back();
+                },
               ),
-              BlurredImageCard(
-                title: 'Current Blur',
-                blurSigma: 10.0,
-                percentage: '$blurAfter%',
-                isDialog: true,
-                imagePath: "assets/images/Profile_picture.png",
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5.0),
-                child: Text(
-                  "Your Partner has requested to see your photo more clearly.",
-                  style: TextStyles.bodySmall.copyWith(
-                    color: AppThemeNotifier.textSecondary,
-                    fontSize: 14,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+              CupertinoDialogAction(
+                child: Text("Accept"),
+                isDefaultAction: true,
+                onPressed: () {
+                  approveUnBlurRequest(data["requestId"]);
+                  Get.back();
+                },
               ),
             ],
           ),
-          actions: [
-            CupertinoDialogAction(
-              onPressed: () {
-                declineUnBlurRequest(data["requestId"]);
-                Get.back();
-                isUnblurRequestDialogOpen = false;
-              },
-              child: Text(
-                "Decline",
-                style: TextStyles.titleMedium.copyWith(
-                  color: Color(0xFF2194FF),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-
-
-
-            CupertinoDialogAction(
-              onPressed: () {
-                approveUnBlurRequest(data["requestId"]);
-                Get.back();
-                isUnblurRequestDialogOpen = false;
-              },
-              child: Text(
-                "Accept Request",
-                style: TextStyles.titleMedium.copyWith(
-                  color: Color(0xFF2194FF),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    ).then((_) {
-      isUnblurRequestDialogOpen = false;
-    });
+        ),
+      );
+    } catch (e) {
+      debugPrint("Dialog error: $e");
+    } finally {
+      _isUnblurDialogShowing = false;
+    }
   }
 
   void _onUnblurRequestSent(data) async {

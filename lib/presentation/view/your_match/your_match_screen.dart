@@ -115,9 +115,11 @@ class YourMatchScreen extends StatelessWidget {
                               InkWell(
                                 onTap:(){
                                   if( status.toString() != AccessRequestStatus.pending.value){
-                                    matchData.unreadMessageCount = 0;
+                                    controller.matchesList[index].unreadMessageCount = 0;
                                     Get.to(()=>ChatScreen(),binding: ChatBinding(chatIdPass: matchData.chatId??"",matchId :matchData.matchId.toString(), userDetails: matchData.user!))!.then((value) {
-                                      matchData.unreadMessageCount = 0;
+                                      controller.matchesList[index].unreadMessageCount = 0;
+                                      controller.matchesList.refresh();
+                                      print(" matchData.unreadMessageCount ${  controller.matchesList[index].unreadMessageCount}");
                                     },);
 
                                   }
@@ -486,17 +488,19 @@ class YourMatchScreen extends StatelessWidget {
                                     child: Text("${timeAgoString}",style: TextStyles.labelSmall.copyWith(color: AppThemeNotifier.textDisabled),)),
                               )
                                   :
-                              Positioned(
-                                  top:12,right:24,
-                                  child:
+                              Obx(
+                          ()=> Positioned(
+                                    top:12,right:24,
+                                    child:
 
-                                  controller.matchesList[index].unreadMessageCount == null ||   controller.matchesList[index].unreadMessageCount == 0?SizedBox():gradientButton(
-                                      height: 22,width:22,
-                                      onPressed: (){},
-                                      buttonText: "${controller.matchesList[index].unreadMessageCount}",
-                                      child: Text("${controller.matchesList[index].unreadMessageCount}",style: TextStyles.labelSmall.copyWith(color: AppThemeNotifier.onPrimary,fontSize: 10),
-                                      )
-                                  ))
+                                    controller.matchesList[index].unreadMessageCount == null ||   controller.matchesList[index].unreadMessageCount == 0?SizedBox():gradientButton(
+                                        height: 22,width:22,
+                                        onPressed: (){},
+                                        buttonText: "${controller.matchesList[index].unreadMessageCount}",
+                                        child: Text("${controller.matchesList[index].unreadMessageCount}",style: TextStyles.labelSmall.copyWith(color: AppThemeNotifier.onPrimary,fontSize: 10),
+                                        )
+                                    )),
+                              )
                             ],
                           );
                         },),

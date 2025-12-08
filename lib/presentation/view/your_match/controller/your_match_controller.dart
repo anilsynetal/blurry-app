@@ -205,8 +205,8 @@ class YourMatchController extends GetxController {
 
   @override
   void onClose() {
-    socketService.socket?.off('match_request_received');
-    socketService.socket?.off('match_request_accepted');
+    // socketService.socket?.off('match_request_received');
+    // socketService.socket?.off('match_request_accepted');
     scrollController.dispose();
     super.onClose();
   }
