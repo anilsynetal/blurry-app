@@ -468,12 +468,21 @@ class YourMatchScreen extends StatelessWidget {
                                           ],
                                         ),
                                       ):   Padding(
-                                          padding: const EdgeInsets.only(top: 10.0),
-                                          child: CustomProgressBar(
-                                            progress: progressValue, // 0.4
-                                            label: '${(progressValue * 100).toStringAsFixed(0)}% Unblurred',
-                                            height: 20,
-                                          )
+                                            padding: const EdgeInsets.only(top: 10.0),
+                                            child: CustomProgressBar(
+                                              progress:
+                                              matchData.unblurRequest?.status.toString() == "approved"?
+                                                  1.0
+                                                  :
+                                              progressValue, // 0.4
+                                              label:
+                                              matchData.unblurRequest?.status.toString() == "approved"?
+                                                  '100% Unblurred'
+                                                  :
+                                                  '${(progressValue * 100).toStringAsFixed(0)}% Unblurred',
+                                              height: 20,
+                                            )
+
 
                                       ),
                                       3.height

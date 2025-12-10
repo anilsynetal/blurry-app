@@ -299,14 +299,23 @@ class ChatHeader extends StatelessWidget {
         ),
 
         // Unblur progress bar
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: CustomProgressBar(
-            progress: progressValue, // 0.4
-            label: '${(progressValue * 100).toStringAsFixed(0)}% Unblurred',
-            height: 18,
-          )
-          ,
+        Obx(
+          ()=> Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: CustomProgressBar(
+              progress:
+              controller. unBlurProfileAccess.value.hasAccess??false?1.0:
+              progressValue, // 0.4
+              label:
+
+              controller. unBlurProfileAccess.value.hasAccess??false?
+              '100% Unblurred'
+          :
+              '${(progressValue * 100).toStringAsFixed(0)}% Unblurred',
+              height: 18,
+            )
+            ,
+          ),
         ),
         20.height,
         // Row(

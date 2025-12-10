@@ -323,7 +323,7 @@ class ChatController extends GetxController with GetTickerProviderStateMixin {
     print("_onUnblurRequestApproved called with data: $data");
     if (data["approvedBy"].toString() != senderUser.id.toString()) {
       getUnBlurProfile();
-      showMessageDialog("Your unblur request was approved", "Request approved");
+      showSuccessMessage("Your unblur request was approved");
       repository.getMatchDetails(matchId).then((value) {
         final controller = Get.find<YourMatchController>();
         int index = controller.matchesList.indexWhere(

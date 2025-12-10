@@ -880,7 +880,9 @@ class ApiRepository {
       } else {
         return DatePlanListResponseModel.fromJson(response.data);
       }
-    } catch (e) {
+    } catch (e,s) {
+      print("errror is $e");
+      print("errror is $s");
       return DatePlanListResponseModel(
         message: "Failed to fetch date plans: ${e.toString()}",
       );

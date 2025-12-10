@@ -54,6 +54,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       themeMode: ThemeMode.light,
       navigatorKey: navigatorKey,
+      debugShowCheckedModeBanner: false,
       theme: Get.find<AppThemeNotifier>().getLightTheme(),
       darkTheme: Get.find<AppThemeNotifier>().getDarkTheme(),
       title: "$appName",

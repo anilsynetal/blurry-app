@@ -6,7 +6,7 @@ class DatePlanListResponseModel {
   String? status;
   String? message;
   List<DatePlanData>? data;
-  PaginationHasMore? pagination;
+  Pagination? pagination;
 
   DatePlanListResponseModel({
     this.status,
@@ -19,7 +19,7 @@ class DatePlanListResponseModel {
     String? status,
     String? message,
     List<DatePlanData>? data,
-    PaginationHasMore? pagination,
+    Pagination? pagination,
   }) =>
       DatePlanListResponseModel(
         status: status ?? this.status,
@@ -36,7 +36,7 @@ class DatePlanListResponseModel {
     status: json["status"],
     message: json["message"],
     data: json["data"] == null ? [] : List<DatePlanData>.from(json["data"]!.map((x) => DatePlanData.fromJson(x))),
-    pagination: json["pagination"] == null ? null : PaginationHasMore.fromJson(json["pagination"]),
+    pagination: json["pagination"] == null ? null : Pagination.fromJson(json["pagination"]),
   );
 
   Map<String, dynamic> toJson() => {
