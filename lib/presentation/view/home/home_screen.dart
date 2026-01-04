@@ -376,12 +376,12 @@ class HomeScreen extends StatelessWidget {
                     sigmaX: 9.0, sigmaY: 9.0, tileMode: TileMode.mirror),
                 child: CachedNetworkImage(
                   imageUrl: "$imageBaseUrl${profile.user!.avatar}",
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                   placeholder: (_, __) => Container(
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage('assets/images/list_card_bg.png'),
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
                       ),
                     ),
                   ),
@@ -389,7 +389,7 @@ class HomeScreen extends StatelessWidget {
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage('assets/images/list_card_bg.png'),
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
                       ),
                     ),
                   ),

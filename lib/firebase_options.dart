@@ -62,11 +62,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAa3bSfK3WkrtYx8RWYoWwDTvWYhLnkgjg',
-    appId: '1:180241236164:ios:e9b4537dceedcbff604991',
+    appId: '1:180241236164:ios:9c4180450d57a325604991', // ✅ from GOOGLE_APP_ID
     messagingSenderId: '180241236164',
     projectId: 'soulfirst-40162',
     storageBucket: 'soulfirst-40162.firebasestorage.app',
-    iosBundleId: 'com.socialapp.soulfirst',
+    iosBundleId: 'com.soulfirst.app', // ✅ from BUNDLE_ID
   );
 
 

@@ -98,7 +98,7 @@ class PlanSwitchScreenController extends GetxController {
         currentPage.value = response.pagination!.currentPage ?? 1;
         totalPages.value = response.pagination!.totalPages ?? 1;
         await repository.getMyActivePlan().then((value) {
-          if(value["data"] != null){
+          if(value["data"]["plan"].toString() != "null"){
             selectedPlan.value = value["data"]["plan"]["name"].toString();
             activePlanId.value = value["data"]["plan"]["_id"].toString();
 
@@ -115,7 +115,7 @@ class PlanSwitchScreenController extends GetxController {
     } catch (e,s) {
       print("Eror is $e");
       print("Eror is $s");
-      showErrorMessageDialog(e.toString());
+      // showErrorMessageDialog(e.toString());
     } finally {
       isLoading.value = false;
       isLoadingMore.value = false;

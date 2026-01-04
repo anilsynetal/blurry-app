@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:blurry/presentation/widgets/time_config.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,17 +25,25 @@ Future<void> setupCameras() async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   TimeZoneHelper.initialize();
-  await setupCameras();
+  try {
+    await setupCameras();
+  } catch (e) {
+    debugPrint("Camera initialization failed: $e");
+    cameras = [];
+  }
   // await ScreenUtil.ensureScreenSize();
 
-  try {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-    FirebaseMessaging.onMessage.listen(showFlutterNotification );
-    await setupFlutterNotifications();
-  } catch (e) {
-    debugPrint(e.toString());
-  }
+ // if(Platform.isAndroid){
+   try {
+     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+     FirebaseMessaging.onMessage.listen(showFlutterNotification );
+     await setupFlutterNotifications();
+   } catch (e,s) {
+     debugPrint(s.toString());
+     debugPrint(e.toString());
+   }
+ // }
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,

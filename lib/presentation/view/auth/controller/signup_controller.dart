@@ -40,7 +40,7 @@ class SignupController extends GetxController {
     fetchDeviceFCMToken();
     super.onInit();
   }
-  RxString deviceToken = "".obs;
+  RxString deviceToken = "device123".obs;
 
 
   Future<void> fetchDeviceFCMToken() async {

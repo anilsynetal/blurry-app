@@ -190,7 +190,7 @@ class YourMatchController extends GetxController {
     isLoadMyPlan.value = true;
     try {
       final value = await repository.getMyActivePlan();
-      if (value["data"] != null) {
+      if (value["data"]["plan"].toString() != "null") {
         selectedPlan.value = PricingPlan.fromJson(value["data"]["plan"]);
       } else {
         selectedPlan.value = PricingPlan(id: "");

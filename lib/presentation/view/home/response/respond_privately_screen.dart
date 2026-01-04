@@ -143,7 +143,7 @@ class RespondPrivatelyScreen extends GetView<RespondPrivatelyController> {
                         decoration: const BoxDecoration(
                           image: DecorationImage(
                             image: AssetImage('assets/images/list_card_bg.png'),
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fill,
                           ),
                         ),
                       );
@@ -152,7 +152,7 @@ class RespondPrivatelyScreen extends GetView<RespondPrivatelyController> {
                       decoration: const BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage('assets/images/list_card_bg.png'),
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fill,
                         ),
                       ),
                     ),

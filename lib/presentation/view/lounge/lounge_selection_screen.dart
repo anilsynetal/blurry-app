@@ -33,6 +33,16 @@ class LoungeSelectionScreen extends GetView<LoungeController> {
         elevation: 0,
         centerTitle: true,
         automaticallyImplyLeading: false,
+        leading: GestureDetector(
+            onTap: (){
+              Get.back();
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Center(child: Image.asset(back_ic,height: 24,)),
+            )
+        ),
+
         title: Column(
           children: [
             Text(

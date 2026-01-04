@@ -2,13 +2,14 @@ import Flutter
 import UIKit
 import GoogleSignIn
 import flutter_local_notifications
+import Firebase
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
   override func application(
       _ application: UIApplication,
       didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-
+    FirebaseApp.configure()
 
     // This is required to make any communication available in the action isolate.
     FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in

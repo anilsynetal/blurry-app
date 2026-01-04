@@ -55,7 +55,7 @@ class LoginController extends GetxController {
     }
   }
 
-  RxString deviceToken = "device".obs;
+  RxString deviceToken = "device123".obs;
 
 
   Future<void> fetchDeviceFCMToken() async {
@@ -287,10 +287,10 @@ class LoginController extends GetxController {
       var data = {
         "identityToken": "${credential.userIdentifier}",
         "name": "${fullName}",
-        "email": "${credential!.email}",
+        "email": "${credential?.email}",
         "avatar": "",
         "deviceToken": "${deviceToken.value}",
-        "platform":Platform.isAndroid ?"android":"ios"
+        "platform":"ios"
       };
       await  authRepository.appleLogin(data).then((value) async {
         GetStorage().write(isGuest, false);
@@ -320,10 +320,10 @@ class LoginController extends GetxController {
 
     } on SignInWithAppleAuthorizationException catch (e) {
       // User cancelled or Apple not available
-      showErrorMessage(e.message);
+      // showErrorMessage(e.message);
     } catch (e) {
       debugPrint("Unexpected Apple error: $e");
-      showErrorMessage("Unexpected error");
+      // showErrorMessage("Unexpected error");
     } finally {
       isLoadGoogleLogin.value = false;
     }

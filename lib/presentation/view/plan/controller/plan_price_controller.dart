@@ -89,7 +89,7 @@ class PricingController extends GetxController {
         currentPage.value = response.pagination!.currentPage ?? 1;
         totalPages.value = response.pagination!.totalPages ?? 1;
         await repository.getMyActivePlan().then((value) {
-          if (value["data"] != null) {
+          if (value["data"]["plan"].toString() != "null") {
             selectedPlan.value = value["data"]["plan"]["_id"].toString();
             activePlanId.value = value["data"]["plan"]["_id"].toString();
           } else {

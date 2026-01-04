@@ -21,7 +21,7 @@ class GetStartedController extends GetxController{
   GetStartedController({required this.apiRepository});
 
   Rx<bool>isLoading =false.obs;
-  RxString deviceToken = "".obs;
+  RxString deviceToken = "deviceToken".obs;
 
 
  @override
