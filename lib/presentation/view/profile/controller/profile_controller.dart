@@ -60,5 +60,23 @@ class ProfileController extends GetxController{
     }
 
   }
+
+  RxBool isLoadingDelete = false.obs;
+  Future<void> deleteAccount() async {
+    isLoadingDelete.value = true;
+    try {
+      final value = await repository.deleteAccount();
+      if (value.status.toString() == "success") {
+        GetStorage().erase();
+        Get.offAll(() => GetStartedScreenFirst(), binding: GetStartedBinding());
+      } else {
+        Get.snackbar("Error", value.message ?? "Failed to delete account");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong");
+    } finally {
+      isLoadingDelete.value = false;
+    }
+  }
   
 }

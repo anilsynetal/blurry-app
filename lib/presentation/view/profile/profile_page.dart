@@ -405,7 +405,18 @@ class ProfileScreen extends GetView<ProfileController> {
               ),
               8.height,
               _buildCardDesign(
-
+                  title: "Delete Account",
+                  imagePath: "assets/icons/deleteaccount.png",
+                  subTitle: "Permanently delete your account",
+                  onTap: (){
+                     showDialog(
+                      context: context,
+                      builder: (context) => _buildDeleteAccountDialog(context),
+                    );
+                  }
+              ),
+              8.height,
+              _buildCardDesign(
                   title: "Logout",
                   imagePath: "assets/icons/logout.png",
                   subTitle: "",
@@ -484,8 +495,121 @@ class ProfileScreen extends GetView<ProfileController> {
     );
   }
 
+  Widget _buildDeleteAccountDialog(BuildContext context) {
+    return Dialog(
+      insetPadding: EdgeInsets.symmetric(horizontal: 20),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Container(
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "Delete Account",
+              style: TextStyles.headlineMedium.copyWith(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            20.height,
+            Container(
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Color(0xFFFFF5F5),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.red.withOpacity(0.3)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.warning_amber_rounded, color: Colors.red, size: 24),
+                      8.width,
+                      Text(
+                        "Warning",
+                        style: TextStyles.titleMedium.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  8.height,
+                  _buildBulletPoint("Permanent removal from all Lounges"),
+                  4.height,
+                  _buildBulletPoint("Deletion of all chat history"),
+                  4.height,
+                  _buildBulletPoint("Loss of profile & unblurred image access"),
+                ],
+              ),
+            ),
+            24.height,
+            Obx(() => controller.isLoadingDelete.value
+                ? CircularProgressIndicator(color: Colors.red)
+                : SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFD32F2F),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        elevation: 0,
+                      ),
+                      onPressed: () {
+                        controller.deleteAccount();
+                      },
+                      child: Text(
+                        "Delete My Account",
+                        style: TextStyles.titleMedium.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  )),
+            16.height,
+            InkWell(
+              onTap: () => Navigator.pop(context),
+              child: Text(
+                "Cancel and return",
+                style: TextStyles.bodyMedium.copyWith(
+                  color: AppThemeNotifier.clickableText,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-
+  Widget _buildBulletPoint(String text) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 6.0),
+          child: CircleAvatar(radius: 2, backgroundColor: Colors.black),
+        ),
+        8.width,
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyles.bodyMedium.copyWith(color: Colors.black87),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 

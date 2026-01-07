@@ -37,6 +37,7 @@ class LoginController extends GetxController {
   final TextEditingController phoneController = TextEditingController();
 
   final RxBool isLoading = false.obs;
+  final RxBool termsAccepted = false.obs;
 
   @override
   Future<void> onInit() async {
@@ -109,6 +110,11 @@ class LoginController extends GetxController {
     if(passwordController.value.text.isEmpty){
       showWarningMessage("Please enter your password");
       return ;
+    }
+
+    if (!termsAccepted.value) {
+      showWarningMessage("Please accept Terms of Service & Privacy Policy");
+      return;
     }
 
     isLoading.value = true;
@@ -230,7 +236,7 @@ class LoginController extends GetxController {
       _currentUser = await signInWithGoogle();
 
       var data = {
-        "idToken": "${_currentUser!.id}",
+        "idToken": "${_currentUser?.id}",
         "name": "${_currentUser!.displayName}",
         "email": "${_currentUser!.email}",
         // "avatar": "${_currentUser!.photoUrl}",
@@ -266,66 +272,132 @@ class LoginController extends GetxController {
     }
   }
 
-
-
   Future<void> appleSignIn() async {
-    // Show the same loader that Google uses
     isLoadGoogleLogin.value = true;
+
     try {
-      // 1. Trigger Apple native UI
       final credential = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
         ],
       );
-      // 2. Build the payload exactly like Google
-      final String? fullName = credential.givenName != null
-          ? '${credential.givenName} ${credential.familyName ?? ''}'.trim()
-          : null;
 
-      var data = {
-        "identityToken": "${credential.userIdentifier}",
-        "name": "${fullName}",
-        "email": "${credential?.email}",
-        "avatar": "",
-        "deviceToken": "${deviceToken.value}",
-        "platform":"ios"
+      final fullName = [
+        credential.givenName,
+        credential.familyName,
+      ].where((e) => e != null && e.isNotEmpty).join(' ');
+
+      final data = {
+        "identityToken": credential.identityToken, // ✅ CORRECT
+        "name": fullName.isNotEmpty ? fullName : null,
+        "email": credential.email, // may be null after first login
+        "deviceToken": deviceToken.value,
+        "platform": "ios",
+
+
+        //       "identityToken": "${credential.userIdentifier}",
+        //       "name": "${fullName}",
+        //       "email": "${credential?.email}",
+        //       // "avatar": "",
+        //       "deviceToken": "${deviceToken.value}",
+        //       "platform":"ios"
       };
-      await  authRepository.appleLogin(data).then((value) async {
-        GetStorage().write(isGuest, false);
-        if(value.status == "success"){
-          GetStorage().write(tokenKey, value.data?.token??"");
-          GetStorage().write(userNameKey, value.data!.user!.name??"");
-          GetStorage().write(emailKey, value.data!.user!.email??"");
-          GetStorage().write(userDataKey, value.data!.user!.toJson()??"");
-          if(value.data?.user?.gender == null ||value.data?.user?.dob == null ||value.data?.user?.avatar == null  ){
-            GetStorage().write(isLoginKey, false);
-            GetStorage().write(isRunningSignUp, true);
-            Get.to(()=>SignUpStepsScreen(),binding: SignUpStepsBinding());
-          }else{
-            // await getMyLounges();
-            GetStorage().write(isLoginKey, true);
-            GetStorage().write(isRunningSignUp, false);
-            Get.offAll(()=>BottomNavBar());
-          }
 
-        }else{
-          showErrorMessage(value.message??"Login Failed");
+      final value = await authRepository.appleLogin(data);
+
+      GetStorage().write(isGuest, false);
+
+      if (value.status == "success") {
+        GetStorage().write(tokenKey, value.data?.token ?? "");
+        GetStorage().write(userNameKey, value.data?.user?.name ?? "");
+        GetStorage().write(emailKey, value.data?.user?.email ?? "");
+        GetStorage().write(userDataKey, value.data?.user?.toJson());
+
+        if (value.data?.user?.gender == null ||
+            value.data?.user?.dob == null ||
+            value.data?.user?.avatar == null) {
+          GetStorage().write(isLoginKey, false);
+          GetStorage().write(isRunningSignUp, true);
+          Get.to(() => SignUpStepsScreen(),
+              binding: SignUpStepsBinding());
+        } else {
+          GetStorage().write(isLoginKey, true);
+          GetStorage().write(isRunningSignUp, false);
+          Get.offAll(() => BottomNavBar());
         }
-      },).onError((error, stackTrace) {
-        isLoadGoogleLogin.value = false;
-      },);
-
-
+      } else {
+        showErrorMessage(value.message ?? "Login Failed");
+      }
     } on SignInWithAppleAuthorizationException catch (e) {
-      // User cancelled or Apple not available
-      // showErrorMessage(e.message);
+      debugPrint("Apple auth error: ${e.message}");
     } catch (e) {
       debugPrint("Unexpected Apple error: $e");
-      // showErrorMessage("Unexpected error");
     } finally {
       isLoadGoogleLogin.value = false;
     }
   }
+
+
+
+  // Future<void> appleSignIn() async {
+  //   // Show the same loader that Google uses
+  //   isLoadGoogleLogin.value = true;
+  //   try {
+  //     // 1. Trigger Apple native UI
+  //     final credential = await SignInWithApple.getAppleIDCredential(
+  //       scopes: [
+  //         AppleIDAuthorizationScopes.email,
+  //         AppleIDAuthorizationScopes.fullName,
+  //       ],
+  //     );
+  //     // 2. Build the payload exactly like Google
+  //     final String? fullName = credential.givenName != null
+  //         ? '${credential.givenName} ${credential.familyName ?? ''}'.trim()
+  //         : null;
+  //
+  //     var data = {
+  //       "identityToken": "${credential.userIdentifier}",
+  //       "name": "${fullName}",
+  //       "email": "${credential?.email}",
+  //       // "avatar": "",
+  //       "deviceToken": "${deviceToken.value}",
+  //       "platform":"ios"
+  //     };
+  //     await  authRepository.appleLogin(data).then((value) async {
+  //       GetStorage().write(isGuest, false);
+  //       if(value.status == "success"){
+  //         GetStorage().write(tokenKey, value.data?.token??"");
+  //         GetStorage().write(userNameKey, value.data!.user!.name??"");
+  //         GetStorage().write(emailKey, value.data!.user!.email??"");
+  //         GetStorage().write(userDataKey, value.data!.user!.toJson()??"");
+  //         if(value.data?.user?.gender == null ||value.data?.user?.dob == null ||value.data?.user?.avatar == null  ){
+  //           GetStorage().write(isLoginKey, false);
+  //           GetStorage().write(isRunningSignUp, true);
+  //           Get.to(()=>SignUpStepsScreen(),binding: SignUpStepsBinding());
+  //         }else{
+  //           // await getMyLounges();
+  //           GetStorage().write(isLoginKey, true);
+  //           GetStorage().write(isRunningSignUp, false);
+  //           Get.offAll(()=>BottomNavBar());
+  //         }
+  //
+  //       }else{
+  //         showErrorMessage(value.message??"Login Failed");
+  //       }
+  //     },).onError((error, stackTrace) {
+  //       isLoadGoogleLogin.value = false;
+  //     },);
+  //
+  //
+  //   } on SignInWithAppleAuthorizationException catch (e) {
+  //     // User cancelled or Apple not available
+  //     // showErrorMessage(e.message);
+  //   } catch (e) {
+  //     debugPrint("Unexpected Apple error: $e");
+  //     // showErrorMessage("Unexpected error");
+  //   } finally {
+  //     isLoadGoogleLogin.value = false;
+  //   }
+  // }
 }

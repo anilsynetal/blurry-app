@@ -44,10 +44,13 @@ Future<void> main() async {
      debugPrint(e.toString());
    }
  // }
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  if(Platform.isAndroid){
+     await SystemChrome.setPreferredOrientations([
+       DeviceOrientation.portraitUp,
+       DeviceOrientation.portraitDown,
+     ]);
+  }
+
 
   await GetStorage.init();
   Get.put(AppThemeNotifier(), permanent: true);

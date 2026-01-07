@@ -17,6 +17,8 @@ import '../../widgets/custom_text_field.dart';
 import 'controller/login_controller.dart';
 import 'forgot_password/forgot_password_screen.dart';
 import 'on_boarding/screens/get_started_screen.dart';
+import '../profile/privacy_policy.dart';
+import '../profile/term_condition.dart';
 
 class LoginScreen extends GetView<LoginController> {
   const LoginScreen({Key? key}) : super(key: key);
@@ -83,6 +85,47 @@ class LoginScreen extends GetView<LoginController> {
                                      Get.to(()=>ForgotPasswordScreen(),binding: ForgotPasswordBinding());
                                    },
                                    child: Text("Forgot Password ?",style: TextStyles.labelSmall.copyWith(color: AppThemeNotifier.clickableText),))
+                             ],
+                           ),
+                           12.height,
+                           Row(
+                             mainAxisAlignment: MainAxisAlignment.start,
+                             children: [
+                               CustomCheckbox(
+                                 size: 18,
+                                 value: controller.termsAccepted.value,
+                                 onChanged: (v) => controller.termsAccepted.value = v ?? false,
+                               ),
+                               10.width,
+                               InkWell(
+                                 onTap: (){
+                                   Get.to(()=>TermAndConditionScreen(),binding: TermConditionBinding());
+                                 },
+                                 child: Text(
+                                   'Terms of Service',
+                                   style: TextStyles.labelMedium.copyWith(
+                                     color: AppThemeNotifier.clickableText,
+                                   ),
+                                 ),
+                               ),
+                               Text(
+                                 ' &',
+                                 style: TextStyles.labelMedium.copyWith(
+                                   color: AppThemeNotifier.textPrimary,
+                                 ),
+                               ),
+                               InkWell(
+                                 onTap: (){
+                                   Get.to(()=>PrivacyPolicyScreen(),binding: PrivacyPolicyBinding());
+                                 },
+                                 child: Text(
+                                   ' Privacy Policy',
+                                   style: TextStyles.labelMedium.copyWith(
+                                     color: AppThemeNotifier.clickableText,
+                                   ),
+                                 ),
+                               ),
+
                              ],
                            ),
                            12.height,

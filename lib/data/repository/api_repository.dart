@@ -164,6 +164,24 @@ class ApiRepository {
     }
   }
 
+  Future<LoginResponseModel> deleteAccount() async {
+    final response = await dioClient.dio.delete(
+      'app/v1/user/delete-account',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer ${GetStorage().read(tokenKey)}',
+          'accept': 'application/json',
+        },
+      ),
+    );
+
+    if (response.data["status"].toString() == "error") {
+      return LoginResponseModel(message: response.data["message"].toString());
+    } else {
+      return LoginResponseModel.fromJson(response.data);
+    }
+  }
+
   Future<UserData> updateProfile(var body) async {
     final response = await dioClient.dio.put(
       'app/v1/user/update-user',
