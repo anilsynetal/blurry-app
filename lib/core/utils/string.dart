@@ -11,6 +11,7 @@ import 'export.dart';
   const String tokenKey = "token";
   const String isLoginKey = "isLogin";
   const String isGuest = "isGuest";
+  const String isPlanEnable = "isPlanEnable";
   const String signUpStage = "signUpStage";
   const String isRunningSignUp = "isRunningSignUp";
   const String userId = "userId";

@@ -42,10 +42,13 @@ class LoginController extends GetxController {
   @override
   Future<void> onInit() async {
     // TODO: implement onInit
+
     await _requestNotificationPermission();
     fetchDeviceFCMToken();
+
     super.onInit();
   }
+
 
   Future<void> _requestNotificationPermission() async {
     var status = await Permission.notification.status;
@@ -288,22 +291,27 @@ class LoginController extends GetxController {
         credential.familyName,
       ].where((e) => e != null && e.isNotEmpty).join(' ');
 
-      final data = {
-        "identityToken": credential.identityToken, // ✅ CORRECT
-        "name": fullName.isNotEmpty ? fullName : null,
-        "email": credential.email, // may be null after first login
+      // final data = {
+      //   "identityToken": credential.identityToken, // ✅ CORRECT
+      //   "name": fullName.isNotEmpty ? fullName : "null",
+      //   "email": credential.email, // may be null after first login
+      //   "deviceToken": deviceToken.value,
+      //   "platform": "ios",
+      // };
+      final Map<String, dynamic> data = {
+        "identityToken": credential.identityToken,
         "deviceToken": deviceToken.value,
         "platform": "ios",
-
-
-        //       "identityToken": "${credential.userIdentifier}",
-        //       "name": "${fullName}",
-        //       "email": "${credential?.email}",
-        //       // "avatar": "",
-        //       "deviceToken": "${deviceToken.value}",
-        //       "platform":"ios"
       };
 
+// add only if NOT null
+      if (credential.email != null) {
+        data["email"] = credential.email;
+      }
+
+      if (fullName.isNotEmpty) {
+        data["name"] = fullName;
+      }
       final value = await authRepository.appleLogin(data);
 
       GetStorage().write(isGuest, false);

@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:blurry/core/theme/app_theme.dart';
 import 'package:blurry/core/theme/typography.dart';
 import 'package:blurry/core/utils/export.dart';
@@ -43,7 +45,7 @@ class PlanSwitchScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Get More Credits',
+                    (Platform.isIOS && GetStorage().read(isPlanEnable) == false)?"Free Credits":    'Get More Credits',
                     style: TextStyles.headlineMedium.copyWith(
                       color: AppThemeNotifier.textPrimary,
                     ),
@@ -59,7 +61,7 @@ class PlanSwitchScreen extends StatelessWidget {
             Obx(
               ()=> SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
                   child: Column(
                     children: [
                       Padding(
@@ -111,7 +113,7 @@ class PlanSwitchScreen extends StatelessWidget {
                                         );
                                       },),
                                       // Continue Button
-                                      Padding(
+                                      (Platform.isIOS && GetStorage().read(isPlanEnable) == false)?SizedBox():  Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 5),
                                         child: Obx(() => gradientButton(
                                           height: 48,

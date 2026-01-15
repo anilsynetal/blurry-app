@@ -359,7 +359,7 @@ class HomeScreen extends StatelessWidget {
   // ──────────────────────────────────────────────────────────────
   Widget _buildProfileCard(MemberData profile, BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Stack(
@@ -376,7 +376,7 @@ class HomeScreen extends StatelessWidget {
                     sigmaX: 9.0, sigmaY: 9.0, tileMode: TileMode.mirror),
                 child: CachedNetworkImage(
                   imageUrl: "$imageBaseUrl${profile.user!.avatar}",
-                  fit: BoxFit.fill,
+                  fit: BoxFit.fitWidth,
                   placeholder: (_, __) => Container(
                     decoration: const BoxDecoration(
                       image: DecorationImage(
@@ -546,7 +546,7 @@ Widget buildShimmerLoadingMember() {
     children: List.generate(
       3,
           (_) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 12),
         child: Shimmer.fromColors(
           baseColor: Colors.grey[300]!,
           highlightColor: Colors.grey[100]!,

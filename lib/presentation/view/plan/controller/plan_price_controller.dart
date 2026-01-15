@@ -89,14 +89,21 @@ class PricingController extends GetxController {
         currentPage.value = response.pagination!.currentPage ?? 1;
         totalPages.value = response.pagination!.totalPages ?? 1;
         await repository.getMyActivePlan().then((value) {
-          if (value["data"]["plan"].toString() != "null") {
-            selectedPlan.value = value["data"]["plan"]["_id"].toString();
-            activePlanId.value = value["data"]["plan"]["_id"].toString();
-          } else {
+          if(value["data"] != null){
+            if (value["data"]["plan"].toString() != "null") {
+              selectedPlan.value = value["data"]["plan"]["_id"].toString();
+              activePlanId.value = value["data"]["plan"]["_id"].toString();
+            } else {
+              if (plans.isNotEmpty && selectedPlan.value.isEmpty) {
+                selectedPlan.value = plans.first.id.toString();
+              }
+            }
+          }else{
             if (plans.isNotEmpty && selectedPlan.value.isEmpty) {
               selectedPlan.value = plans.first.id.toString();
             }
           }
+
         });
       } else {
         showErrorMessageDialog(response.message ?? 'Failed to load plans');

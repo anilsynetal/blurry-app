@@ -47,16 +47,12 @@ class ProfileController extends GetxController{
   logout() async {
     isLogoutLoad.value =true;
     try {
-      await repository.logout().then((value) {
-        if (value["status"].toString() == "success") {
-          GetStorage().erase();
-          Get.offAll(() => GetStartedScreenFirst(),
-              binding: GetStartedBinding());
-        }
-      },
-      );
+      await repository.logout();
     }finally{
       isLogoutLoad.value =false;
+      GetStorage().erase();
+      Get.offAll(() => GetStartedScreenFirst(),
+          binding: GetStartedBinding());
     }
 
   }

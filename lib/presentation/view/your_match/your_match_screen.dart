@@ -61,7 +61,7 @@ class YourMatchScreen extends StatelessWidget {
                       if(controller.isLoading.value )...[
                         ...List.generate(3, (index) {
                           return  Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 3),
+                            padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 3),
                             child: Shimmer.fromColors(
                               baseColor: Colors.grey[300]!,
                               highlightColor: Colors.grey[100]!,
@@ -113,6 +113,10 @@ class YourMatchScreen extends StatelessWidget {
                           return Stack(
                             children: [
                               InkWell(
+                                focusColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                splashColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
                                 onTap:(){
                                   if( status.toString() != AccessRequestStatus.pending.value){
                                     controller.matchesList[index].unreadMessageCount = 0;
@@ -126,7 +130,7 @@ class YourMatchScreen extends StatelessWidget {
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(horizontal: 12,vertical: 5),
-                                  margin: EdgeInsets.symmetric(horizontal: 16,vertical: 4),
+                                  margin: EdgeInsets.symmetric(horizontal: 12,vertical: 4),
                                   decoration: BoxDecoration(
                                       border: Border.all(color:   status.toString() == AccessRequestStatus.pending.value? Colors.transparent:AppThemeNotifier.border,width: 1),
                                       color:
@@ -559,7 +563,7 @@ class YourMatchScreen extends StatelessWidget {
   Widget _buildPlanSection(YourMatchController controller) {
     return Obx(
       ()=> Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 12.0),
         child:
         controller.isLoadMyPlan.value
             ? Shimmer.fromColors(

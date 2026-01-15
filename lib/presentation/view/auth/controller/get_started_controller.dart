@@ -27,8 +27,16 @@ class GetStartedController extends GetxController{
  @override
   void onInit() {
    fetchDeviceFCMToken();
+   if(Platform.isIOS){
+     savePlanStatus();
+   }
     // TODO: implement onInit
     super.onInit();
+  }
+
+
+  savePlanStatus(){
+    apiRepository.getPaymentPlanStatus();
   }
   Future<void> fetchDeviceFCMToken() async {
     try {
@@ -88,7 +96,6 @@ class GetStartedController extends GetxController{
             String PlanID = response.data!.firstWhere((element) => element.price.toString() == "0",).id.toString();
             if(PlanID != "null"){
               final dio = Dio();
-
               try {
                 // STATIC API CALL → 200 or 400 both allowed
                 final res = await dio.post(

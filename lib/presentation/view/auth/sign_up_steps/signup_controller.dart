@@ -5,6 +5,7 @@ import 'package:blurry/presentation/widgets/getx_message_toast.dart';
 import 'package:blurry/presentation/widgets/message_dialog.dart';
 import 'package:blurry/presentation/widgets/showErrorDialog.dart';
 import 'package:camera/camera.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -17,6 +18,8 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/string.dart';
 import '../../../../data/repository/api_repository.dart';
 import '../../../../main.dart';
+import '../../../bottom_bar/bottom_bar.dart';
+import '../../lounge/lounge_selection_screen.dart';
 import '../../plan/view/plan_price_screen.dart';
 
 class SignUpStepsController extends GetxController {
@@ -247,15 +250,41 @@ class SignUpStepsController extends GetxController {
       isLoading.value = false;
     }
 
-
-
-
-
-
-
-
   }
 
+  activeFreePlan() async {
+    if(Platform.isIOS && GetStorage().read(isPlanEnable) == false){
+      final response = await authRepository.getPlanList(
+        page: 1,
+        limit: 100,
+      );
+      if (response.data != null) {
+        String PlanID = response.data!.firstWhere((element) => element.price.toString() == "0",).id.toString();
+        if(PlanID != "null"){
+          final dio = Dio();
+          try {
+            // STATIC API CALL → 200 or 400 both allowed
+            final res = await dio.post(
+              '${baseUrl}app/v1/payments/create-payment-intent',
+              data: {"planId": PlanID},
+              options: Options(
+                headers: {
+                  'Authorization': 'Bearer ${GetStorage().read(tokenKey)}',
+                  'Accept': 'application/json',
+                },
+              ),
+            );
+
+            print("API Response → ${res.data}");
+          } catch (err) {
+            // If API returns 400, Dio throws error — but YOU STILL WANT TO CONTINUE
+            print("API Error but allowed → $err");
+          }
+        }
+      } else {
+      }
+    }
+  }
 
   Future<void> updateProfileImage(String imgPath,context) async {
 
@@ -295,17 +324,24 @@ class SignUpStepsController extends GetxController {
         }else{
           showCupertinoDialog(
             context: context,
+            barrierDismissible: false,
             builder: (BuildContext context) {
               return CupertinoMessageCustomDialog(
                 topImage: Image.asset("assets/icons/check_success.png",height: 80,),
                 heading: 'Photo Verification Successful!',
                 title: 'Looking good! Your photo is verified — you’re ready to make some real connections. 🌟',
                 leftButtonText: 'Continue',
-                onLeftButtonTap: () {
+                onLeftButtonTap: () async {
                   GetStorage().write(userDataKey, value.data!.user?.toJson()??"");
                   GetStorage().write(isLoginKey, true);
                   GetStorage().write(isRunningSignUp, false);
-                  Get.to(() => PricingScreen(), binding: PricingBinding());
+                  if(Platform.isIOS && GetStorage().read(isPlanEnable) == false){
+                    await Get.to(() => LoungeSelectionScreen(), binding: LoungeBinding());
+                    Get.offAll(()=>BottomNavBar());
+                  }else{
+                    Get.to(() => PricingScreen(), binding: PricingBinding());
+                  }
+
                 },
                 rightButtonText: '',
                 onRightButtonTap: () {
@@ -492,6 +528,7 @@ class SignUpStepsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    activeFreePlan();
     _initCamera();
   }
 

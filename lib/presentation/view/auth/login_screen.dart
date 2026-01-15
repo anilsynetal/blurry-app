@@ -150,6 +150,10 @@ class LoginScreen extends GetView<LoginController> {
                            ),
                            20.height,
                            InkWell(
+                             focusColor: Colors.transparent,
+                               highlightColor: Colors.transparent,
+                              splashColor: Colors.transparent,
+                               hoverColor: Colors.transparent,
                              onTap: (){
                                controller.signIn();
                              },
@@ -173,6 +177,10 @@ class LoginScreen extends GetView<LoginController> {
                             onTap: (){
                               controller.appleSignIn();
                             },
+                            focusColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
                             child: Container(
                                height: 50,
                                width: Get.width,

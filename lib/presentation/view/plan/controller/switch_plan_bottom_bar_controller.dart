@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:blurry/presentation/view/profile/controller/profile_controller.dart';
 import 'package:blurry/presentation/widgets/showErrorDialog.dart' show showErrorMessageDialog;
@@ -93,15 +94,18 @@ class PlanSwitchScreenController extends GetxController {
         if (!loadMore) {
           plans.clear();
         }
+        if(Platform.isIOS && GetStorage().read(isPlanEnable) == false){
+          plans.value =  [response.data!.firstWhere((element) => element.price.toString() == "0")];
+        }else{
+          plans.addAll(response.data!);
+        }
 
-        plans.addAll(response.data!);
         currentPage.value = response.pagination!.currentPage ?? 1;
         totalPages.value = response.pagination!.totalPages ?? 1;
         await repository.getMyActivePlan().then((value) {
           if(value["data"]["plan"].toString() != "null"){
             selectedPlan.value = value["data"]["plan"]["name"].toString();
             activePlanId.value = value["data"]["plan"]["_id"].toString();
-
           }else{
             if (plans.isNotEmpty && selectedPlan.value.isEmpty) {
               selectedPlan.value = plans.first.name.toString();
@@ -182,7 +186,9 @@ class PlanSwitchScreenController extends GetxController {
       if (Get.isRegistered<YourMatchController>()) {
         Get.find<YourMatchController>().getMyActivePlanApi();
       }
-
+      if (Get.isRegistered<ProfileController>()) {
+        Get.find<ProfileController>().getMyActivePlanApi();
+      }
       securePaymentLoading.value = false;
 
       await showCupertinoDialog(
@@ -261,6 +267,9 @@ class PlanSwitchScreenController extends GetxController {
         if (Get.isRegistered<YourMatchController>()) {
           Get.find<YourMatchController>().getMyActivePlanApi();
         }
+        if (Get.isRegistered<ProfileController>()) {
+          Get.find<ProfileController>().getMyActivePlanApi();
+        }
         showSuccessMessage('Payment completed successfully!');
         securePaymentLoading.value = false;
 
@@ -299,6 +308,11 @@ class PlanSwitchScreenController extends GetxController {
         if (Get.isRegistered<YourMatchController>()) {
           Get.find<YourMatchController>().getMyActivePlanApi();
         }
+
+        if (Get.isRegistered<ProfileController>()) {
+          Get.find<ProfileController>().getMyActivePlanApi();
+        }
+
       },);
 
 

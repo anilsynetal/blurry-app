@@ -63,7 +63,7 @@ class ProfileScreen extends GetView<ProfileController> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 12),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,6 +164,10 @@ class ProfileScreen extends GetView<ProfileController> {
                        ),
                        Spacer(),
                        InkWell(
+                         focusColor: Colors.transparent,
+                         highlightColor: Colors.transparent,
+                         splashColor: Colors.transparent,
+                         hoverColor: Colors.transparent,
                          onTap: (){
                            Get.to(()=>EditProfileScreen(),binding: EditProfileBinding());
                          },
@@ -461,38 +465,71 @@ class ProfileScreen extends GetView<ProfileController> {
   {required String imagePath,required String title, required String subTitle, required Callback onTap}
       ){
     return InkWell(
+      focusColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      hoverColor: Colors.transparent,
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8,vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
-          border: Border.all(color: AppThemeNotifier.border,width: 1),
-          borderRadius: BorderRadius.circular(50)
+          border: Border.all(color: AppThemeNotifier.border, width: 1),
+          borderRadius: BorderRadius.circular(50),
         ),
         child: Row(
           children: [
             CircleAvatar(
-              backgroundColor: Color(0xFFF0F0F0),
+              backgroundColor: const Color(0xFFF0F0F0),
               child: Center(
-                child: Image.asset(imagePath,height:title == "Logout"?16: 23,color: AppThemeNotifier.textPrimary,),
-                
+                child: Image.asset(
+                  imagePath,
+                  height: title == "Logout" ? 16 : 23,
+                  color: AppThemeNotifier.textPrimary,
+                ),
               ),
             ),
-            8.width,
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title,style: TextStyles.titleMedium.copyWith(color: AppThemeNotifier.textPrimary,fontSize: 15),),
 
-                subTitle == ""?SizedBox():  Text(subTitle,style: TextStyles.labelSmall.copyWith(color: AppThemeNotifier.textDisabled.withOpacity(0.6)),),
-              ],
+            8.width,
+
+            /// Text section
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyles.titleMedium.copyWith(
+                      color: AppThemeNotifier.textPrimary,
+                      fontSize: 15,
+                    ),
+                  ),
+
+                  if (subTitle.isNotEmpty)
+                    Text(
+                      subTitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyles.labelSmall.copyWith(
+                        color: AppThemeNotifier.textDisabled.withOpacity(0.6),
+                      ),
+                    ),
+                ],
+              ),
             ),
-            Spacer(),
-            Icon(Icons.arrow_forward_ios_rounded,color: AppThemeNotifier.textSecondary,size: 16,)
+
+
+
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: AppThemeNotifier.textSecondary,
+              size: 16,
+            ),
           ],
         ),
       ),
     );
+
   }
 
   Widget _buildDeleteAccountDialog(BuildContext context) {
@@ -577,6 +614,10 @@ class ProfileScreen extends GetView<ProfileController> {
                   )),
             16.height,
             InkWell(
+              focusColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              hoverColor: Colors.transparent,
               onTap: () => Navigator.pop(context),
               child: Text(
                 "Cancel and return",
@@ -754,6 +795,10 @@ class GuestProfileScreen extends StatelessWidget {
     required Callback onTap,
   }) {
     return InkWell(
+      focusColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      hoverColor: Colors.transparent,
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -789,6 +834,8 @@ class GuestProfileScreen extends StatelessWidget {
                     ? SizedBox()
                     : Text(
                   subTitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyles.labelSmall.copyWith(
                     color: AppThemeNotifier.textDisabled.withOpacity(0.6),
                   ),
