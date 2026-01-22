@@ -1,5 +1,8 @@
 
 
+import 'dart:io';
+
+import 'package:blurry/data/repository/api_repository.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../../../core/services/binding.dart';
@@ -29,7 +32,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
 
     },);
+    if(Platform.isIOS){
+      savePlanStatus();
+    }
     super.initState();
+  }
+  savePlanStatus(){
+    ApiRepository().getPaymentPlanStatus();
   }
 
   @override

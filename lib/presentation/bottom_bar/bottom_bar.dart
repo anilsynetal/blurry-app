@@ -37,6 +37,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     }
     super.initState();
   }
+
   int _page = 0;
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
@@ -94,7 +95,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           });
         },):
         _page == 1 ?YourMatchScreen():
-        _page == 2 ?PlanSwitchScreen():
+        _page == 2 ? PlanSwitchScreen():
         _page == 3 ?
         GetStorage().read(isGuest)??false ?GuestProfileScreen():
         ProfileScreen():

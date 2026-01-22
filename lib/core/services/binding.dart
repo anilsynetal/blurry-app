@@ -31,6 +31,8 @@ import '../../presentation/view/your_match/model/my_matches_list_model.dart';
 class AuthBinding extends Bindings {
   @override
   void dependencies() {
+    Get.put(DioClient(), permanent: true);
+    Get.put(ApiRepository(), permanent: true);
     // Get.put(DioClient(), permanent: true);
     // Get.put(AuthRepository(), permanent: true);
     // Get.lazyPut(() => AuthController(loginRepository: Get.find()));
