@@ -149,7 +149,7 @@ class LoginScreen extends GetView<LoginController> {
                              ],
                            ),
                            20.height,
-                           InkWell(
+                          InkWell(
                              focusColor: Colors.transparent,
                                highlightColor: Colors.transparent,
                               splashColor: Colors.transparent,

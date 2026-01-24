@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import '../../core/utils/export.dart'; // Adjust import as per your project
+import '../../core/utils/string.dart';
 import '../../data/repository/api_repository.dart';
 
 class CreditBoxWidget extends StatelessWidget {
@@ -11,8 +15,11 @@ class CreditBoxWidget extends StatelessWidget {
     // Initialize the controller
     final WalletController controller = Get.put(WalletController());
 
-    return Obx(
-          () => Container(
+    bool isPlanDisabled = Platform.isIOS && GetStorage().read(isPlanEnable) == false;
+    return    isPlanDisabled?SizedBox(): Obx(
+          () =>
+
+              Container(
         padding: const EdgeInsets.symmetric(
           horizontal: 12,
           vertical: 5,

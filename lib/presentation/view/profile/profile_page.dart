@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:blurry/core/services/binding.dart';
 import 'package:blurry/core/theme/app_theme.dart';
 import 'package:blurry/core/theme/typography.dart';
@@ -194,7 +196,7 @@ class ProfileScreen extends GetView<ProfileController> {
                ),
              ),
               10.height,
-              Obx(
+              (Platform.isIOS && GetStorage().read(isPlanEnable) == false)?SizedBox():     Obx(
                 ()=> GestureDetector(
                   onTap: (){
 

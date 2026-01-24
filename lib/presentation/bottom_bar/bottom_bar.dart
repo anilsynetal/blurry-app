@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:blurry/core/theme/app_theme.dart';
 import 'package:blurry/core/utils/string.dart';
 import 'package:blurry/presentation/view/home/home_screen.dart';
@@ -57,25 +58,36 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
 
 
-    final List<String> labels = const ['Home', 'Match', 'Credit', 'Profile'];
+    bool isPlanDisabled = Platform.isIOS && GetStorage().read(isPlanEnable) == false;
+
+    final List<String> labels = isPlanDisabled
+        ? const ['Home', 'Match', 'Profile']
+        : const ['Home', 'Match', 'Credit', 'Profile'];
+
+    final List<Widget> items = <Widget>[
+      Image.asset("assets/bottom_tab/home_unselected.png", height: 24),
+      Image.asset("assets/bottom_tab/match_unselected.png", height: 24),
+      if (!isPlanDisabled)
+        Image.asset("assets/bottom_tab/credit_unselected.png", height: 24),
+      Image.asset("assets/bottom_tab/profile_unselected.png", height: 24),
+    ];
+
+    final List<Widget> itemsSelected = <Widget>[
+      Image.asset("assets/bottom_tab/home_selected.png", height: 45),
+      Image.asset("assets/bottom_tab/match_selected.png", height: 45),
+      if (!isPlanDisabled)
+        Image.asset("assets/bottom_tab/credit_selected.png", height: 45),
+      Image.asset("assets/bottom_tab/profile_selected.png", height: 45),
+    ];
+
     return Scaffold(
         bottomNavigationBar: CurvedNavigationBarCustom(
           key: _bottomNavigationKey,
           index: _page,
-          items: <Widget>[
-            Image.asset("assets/bottom_tab/home_unselected.png",height: 24,),
-            Image.asset("assets/bottom_tab/match_unselected.png",height: 24,),
-            Image.asset("assets/bottom_tab/credit_unselected.png",height: 24,),
-            Image.asset("assets/bottom_tab/profile_unselected.png",height: 24,),
-          ],
-          itemsSelected: <Widget>[
-            Image.asset("assets/bottom_tab/home_selected.png",height: 45,),
-            Image.asset("assets/bottom_tab/match_selected.png",height: 45,),
-            Image.asset("assets/bottom_tab/credit_selected.png",height: 45,),
-            Image.asset("assets/bottom_tab/profile_selected.png",height: 45,),
-          ],
+          items: items,
+          itemsSelected: itemsSelected,
           labels: labels,
-          color:AppThemeNotifier.background,
+          color: AppThemeNotifier.background,
           buttonBackgroundColor: AppThemeNotifier.background,
           backgroundColor: AppThemeNotifier.background,
           animationCurve: Curves.easeInOut,
@@ -88,35 +100,62 @@ class _BottomNavBarState extends State<BottomNavBar> {
           },
           letIndexChange: (index) => true,
         ),
-        body:
-        _page == 0 ?HomeScreen(onTapSetting: (){
-          setState(() {
-            _page = 3;
-          });
-        },):
-        _page == 1 ?YourMatchScreen():
-        _page == 2 ? PlanSwitchScreen():
-        _page == 3 ?
-        GetStorage().read(isGuest)??false ?GuestProfileScreen():
-        ProfileScreen():
-        Container(
-          color: AppThemeNotifier.background,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(_page.toString(), style: TextStyle(fontSize: 160)),
-                ElevatedButton(
-                  child: Text('Go To Page of index 1'),
-                  onPressed: () {
-                    final CurvedNavigationBarState? navBarState =
-                        _bottomNavigationKey.currentState;
-                    navBarState?.setPage(1);
-                  },
-                )
-              ],
-            ),
-          ),
-        ));
+        body: _buildBody(isPlanDisabled));
+  }
+
+  Widget _buildBody(bool isPlanDisabled) {
+    if (isPlanDisabled) {
+      return _page == 0
+          ? HomeScreen(onTapSetting: () {
+              setState(() {
+                _page = 2; // Index of Profile when Credit is hidden
+              });
+            })
+          : _page == 1
+              ? YourMatchScreen()
+              : _page == 2
+                  ? (GetStorage().read(isGuest) ?? false
+                      ? GuestProfileScreen()
+                      : ProfileScreen())
+                  : _errorPage();
+    } else {
+      return _page == 0
+          ? HomeScreen(onTapSetting: () {
+              setState(() {
+                _page = 3; // Index of Profile when Credit is visible
+              });
+            })
+          : _page == 1
+              ? YourMatchScreen()
+              : _page == 2
+                  ? PlanSwitchScreen()
+                  : _page == 3
+                      ? (GetStorage().read(isGuest) ?? false
+                          ? GuestProfileScreen()
+                          : ProfileScreen())
+                      : _errorPage();
+    }
+  }
+
+  Widget _errorPage() {
+    return Container(
+      color: AppThemeNotifier.background,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(_page.toString(), style: TextStyle(fontSize: 160)),
+            ElevatedButton(
+              child: Text('Go To Page of index 1'),
+              onPressed: () {
+                final CurvedNavigationBarState? navBarState =
+                    _bottomNavigationKey.currentState;
+                navBarState?.setPage(1);
+              },
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:blurry/presentation/view/home/response/respond_privately_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -52,10 +53,10 @@ class YourMatchScreen extends StatelessWidget {
                   physics: AlwaysScrollableScrollPhysics(),
                   child: Column(
                     children: [
-
+                      (Platform.isIOS && GetStorage().read(isPlanEnable) == false)?SizedBox():
                       _buildPlanSection(controller),
-                      const SizedBox(height: 10),
-                      Divider(height: 1,thickness: 1,color: AppThemeNotifier.border,),
+                      (Platform.isIOS && GetStorage().read(isPlanEnable) == false)?SizedBox():  const SizedBox(height: 10),
+                      (Platform.isIOS && GetStorage().read(isPlanEnable) == false)?SizedBox():  Divider(height: 1,thickness: 1,color: AppThemeNotifier.border,),
                       const SizedBox(height: 10),
 
                       if(controller.isLoading.value )...[
