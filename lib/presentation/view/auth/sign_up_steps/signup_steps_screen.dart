@@ -299,20 +299,21 @@ class SignUpStepsScreen extends GetView<SignUpStepsController> {
                   fillColor: Colors.transparent,
                 ),
               ),
-              Positioned(
-                top: -3,
-                left: 0,
-                child: Text(
-                  "*",
-                  style: TextStyles.headlineMedium.copyWith(
-                    color: Colors.red,
-                    height: 0,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
+
             ],
           ),
+        ),  const SizedBox(height: 6),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              "(Optional)",
+              style: TextStyles.labelSmall.copyWith(
+                color: AppThemeNotifier.textDisabled.withOpacity(0.7),
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 12),
         Obx(

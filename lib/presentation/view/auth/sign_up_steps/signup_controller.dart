@@ -191,10 +191,11 @@ class SignUpStepsController extends GetxController {
         showWarningMessage("Please select your date of birth");
         return;
       }
-     else if( locationCtrl.value == ""){
-        showWarningMessage("Please select your cities/Provinces");
-        return;
-      }else{
+     // else if( locationCtrl.value == ""){
+     //    showWarningMessage("Please select your cities/Provinces");
+     //    return;
+     //  }
+     else{
         submitProfileStep2();
       }
 
