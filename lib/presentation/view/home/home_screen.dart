@@ -320,30 +320,21 @@ class HomeScreen extends StatelessWidget {
           Positioned(
             top: 0,
             bottom: 0,
+            left: 0,
+            right: 0,
             child: Padding(
               padding: const EdgeInsets.symmetric(
                   horizontal: 12.0, vertical: 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: [
-                  Row(
-                    children: [
-                      Image.asset("assets/icons/stars_2.png", height: 14),
-                      5.width,
-                      Text(
-                        "Your Punchline",
-                        style: TextStyles.labelSmall.copyWith(
-                            fontSize: 13,
-                            color: AppThemeNotifier.onPrimary),
-                      ),
-                    ],
-                  ),
-                  4.height,
-                  Text(
-                    ctrl.userPunchline.value,
-                    style: TextStyles.titleLarge
-                        .copyWith(color: AppThemeNotifier.onPrimary),
+                  Flexible(
+                    child: Text(
+                      "${ctrl.userPunchline.value}",
+                      style: TextStyles.titleLarge
+                          .copyWith(color: AppThemeNotifier.onPrimary),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),
@@ -424,7 +415,7 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   // Vibe description
                   Text(
-                    profile.vibeDescription ?? '',
+                    profile.user?.punchline ?? '',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyles.bodySmall.copyWith(
@@ -524,7 +515,7 @@ class HomeScreen extends StatelessWidget {
                           }
                         },
                         buttonText:
-                        (profile.isRequest ?? false) ? "Requested" : "Response",
+                        (profile.isRequest ?? false) ? "Respond" : "Response",
                       ),
                     ],
                   ),

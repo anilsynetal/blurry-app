@@ -146,6 +146,7 @@ class User {
   bool? isActive;
   bool? isEmailVerified;
   String? cityName;
+  String? punchline;
 
   User({
     this.id,
@@ -156,7 +157,8 @@ class User {
     this.age,
     this.isActive,
     this.isEmailVerified,
-    this.cityName
+    this.cityName,
+    this.punchline,
   });
 
   User copyWith({
@@ -168,7 +170,8 @@ class User {
     int? age,
     bool? isActive,
     bool? isEmailVerified,
-    String?cityName
+    String?cityName,
+    String?punchline
   }) =>
       User(
         id: id ?? this.id,
@@ -179,7 +182,8 @@ class User {
         age: age ?? this.age,
         isActive: isActive ?? this.isActive,
           isEmailVerified: isEmailVerified ?? this.isEmailVerified,
-          cityName :cityName ?? this.cityName
+          cityName :cityName ?? this.cityName,
+        punchline :punchline ?? this.punchline,
       );
 
   factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
@@ -195,7 +199,8 @@ class User {
     age: json["age"],
     isActive: json["isActive"],
       isEmailVerified: json["isEmailVerified"],
-      cityName:json["city"]
+      cityName:json["city"],
+      punchline:json["punchLine"]
   );
 
   Map<String, dynamic> toJson() => {
@@ -207,7 +212,8 @@ class User {
     "age": age,
     "isActive": isActive,
     "isEmailVerified": isEmailVerified,
-    "city":cityName
+    "city":cityName,
+    "punchLine":punchline
   };
 }
 

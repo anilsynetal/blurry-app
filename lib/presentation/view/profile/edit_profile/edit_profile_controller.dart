@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/utils/string.dart';
 import '../../../../data/repository/api_repository.dart';
+import '../../home/home_controller.dart';
 import '../controller/profile_controller.dart';
 
 class EditProfileController extends GetxController {
@@ -178,7 +179,13 @@ class EditProfileController extends GetxController {
           "gender":genderValue
         };
         final response = await apiRepository.updateProfile(updateBody);
-        Get.find<ProfileController>().bioHome.value = "${response.bio}";
+        if (Get.isRegistered<ProfileController>()) {
+          Get.find<ProfileController>().bioHome.value = response.bio ?? "";
+        }
+
+        if (Get.isRegistered<HomeController>()) {
+          Get.find<HomeController>().userPunchline.value = response.punchLine ?? "";
+        }
           GetStorage().write(userNameKey, response.name??"");
           GetStorage().write(emailKey, response.email??"");
         log("Update Profile response ${ response.toJson()}");

@@ -49,6 +49,7 @@ class HomeController extends GetxController {
     super.onInit();
     getSettingDetails();
     getUnreadCount();
+    _fetchProfileDetails();
     await getMyLounges();
 
   }
@@ -130,7 +131,7 @@ class HomeController extends GetxController {
       await repository.getMyLounges().then((value) async {
         if(value["data"] != null){
 
-          userPunchline.value = '“${value["data"]["lounge"]["description"]}”';
+          // userPunchline.value = '“${value["data"]["lounge"]["description"]}”';
           currentLoungeId.value = '${value["data"]["lounge"]["_id"]}';
           currentLounge.value = '${value["data"]["lounge"]["name"]}';
           bannerImageLounge.value = '${imageBaseUrl}${value["data"]["lounge"]["bannerImage"]}';
@@ -146,4 +147,26 @@ class HomeController extends GetxController {
 
     }
   }
+
+  Future<void> _fetchProfileDetails() async {
+    try {
+      isLoading.value = true;
+      final response = await repository.getProfileDetails();
+
+      if (response != null ) {
+        final user = response!.data!.user!;
+
+
+        userPunchline.value ='“${user.punchLine ?? ''}”';;
+
+      } else {
+
+      }
+    } catch (e) {
+
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
 }
