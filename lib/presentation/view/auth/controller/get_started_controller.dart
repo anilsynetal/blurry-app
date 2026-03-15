@@ -27,17 +27,17 @@ class GetStartedController extends GetxController{
  @override
   void onInit() {
    fetchDeviceFCMToken();
-   if(Platform.isIOS){
-     savePlanStatus();
-   }
+   // if(Platform.isIOS){
+   //   savePlanStatus();
+   // }
     // TODO: implement onInit
     super.onInit();
   }
 
 
-  savePlanStatus(){
-    apiRepository.getPaymentPlanStatus();
-  }
+  // savePlanStatus(){
+  //   apiRepository.getPaymentPlanStatus();
+  // }
   Future<void> fetchDeviceFCMToken() async {
     try {
       // Request notification permissions on iOS

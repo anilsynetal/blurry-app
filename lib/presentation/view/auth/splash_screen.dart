@@ -32,14 +32,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
 
     },);
-    if(Platform.isIOS){
-      savePlanStatus();
-    }
+    // if(Platform.isIOS){
+    //   savePlanStatus();
+    // }
     super.initState();
   }
-  savePlanStatus(){
-    ApiRepository().getPaymentPlanStatus();
-  }
+  // savePlanStatus(){
+  //   // ApiRepository().getPaymentPlanStatus();
+  // }
 
   @override
   Widget build(BuildContext context) {

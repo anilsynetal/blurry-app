@@ -452,21 +452,21 @@ class ApiRepository {
     return response.data;
   }
 
-  Future<dynamic> getPaymentPlanStatus() async {
-    final response = await dioClient.dio.get(
-      'app/v1/settings/purchase-plan-status',
-      options: Options(
-        headers: {
-          'accept': 'application/json',
-        },
-      ),
-    );
-    if(response.data["status"] == "success"){
-      GetStorage().write("$isPlanEnable", bool.tryParse(response.data["data"]["isEnabled"].toString())??true);
-    }
-
-    return response.data;
-  }
+  // Future<dynamic> getPaymentPlanStatus() async {
+  //   final response = await dioClient.dio.get(
+  //     'app/v1/settings/purchase-plan-status',
+  //     options: Options(
+  //       headers: {
+  //         'accept': 'application/json',
+  //       },
+  //     ),
+  //   );
+  //   if(response.data["status"] == "success"){
+  //     GetStorage().write("$isPlanEnable", bool.tryParse(response.data["data"]["isEnabled"].toString())??true);
+  //   }
+  //
+  //   return response.data;
+  // }
 
   Future<dynamic> sendResponse( String targetUserId,String message) async {
     final response = await dioClient.dio.post(
