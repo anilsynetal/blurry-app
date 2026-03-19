@@ -3,7 +3,7 @@ import UIKit
 import GoogleSignIn
 import flutter_local_notifications
 import Firebase
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate {
   override func application(
       _ application: UIApplication,

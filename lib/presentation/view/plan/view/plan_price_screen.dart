@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:blurry/core/theme/app_theme.dart';
 import 'package:blurry/core/theme/typography.dart';
 import 'package:blurry/core/utils/export.dart';
@@ -285,23 +287,39 @@ Widget buildPlanCard(PricingPlan plan,int index,Callback onTap,bool isSelected  
                     // plan.badge.toString().toLowerCase() == "free"?SizedBox():
                     plan.price.toString() == "0"?SizedBox():   Padding(
                       padding: const EdgeInsets.only(left: 12),
-                      child: Row(
+                      child: Column(
                         mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                           "${plan.currency.toString()} ${plan.price.toString()}",
-                            style: TextStyles.headlineMedium.copyWith(
+                          if(Platform.isIOS) Padding(
+                            padding: const EdgeInsets.only(bottom: 2.0),
+                            child: Text("30 Day Free Trial Then",style: TextStyles.headlineMedium.copyWith(
                                 color:isSelected?AppThemeNotifier.onPrimary: AppThemeNotifier.textTertiary,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700
-                            ),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500
+                            ),),
                           ),
-                          Text(
-                            plan.billingCycle == "" ||  plan.billingCycle == null ?"":    "/${plan.billingCycle.toString().toLowerCase() == "monthly"?"M":plan.billingCycle.toString().toLowerCase() == "yearly"?"Y":plan.billingCycle.toString()}",
-                            style: TextStyles.headlineMedium.copyWith(
-                              color:isSelected?AppThemeNotifier.onPrimary: AppThemeNotifier.textDisabled,
-                              fontSize: 16,
-                            ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+
+                              Text(
+                               "${plan.currency.toString()} ${plan.price.toString()}",
+                                style: TextStyles.headlineMedium.copyWith(
+                                    color:isSelected?AppThemeNotifier.onPrimary: AppThemeNotifier.textTertiary,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700
+                                ),
+                              ),
+                              Text(
+                                plan.billingCycle == "" ||  plan.billingCycle == null ?"":    "/${plan.billingCycle.toString().toLowerCase() == "monthly"?"Month":plan.billingCycle.toString().toLowerCase() == "yearly"?"Year":plan.billingCycle.toString()}",
+                                style: TextStyles.headlineMedium.copyWith(
+                                  color:isSelected?AppThemeNotifier.onPrimary: AppThemeNotifier.textDisabled,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

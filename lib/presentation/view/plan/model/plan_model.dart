@@ -89,6 +89,7 @@ class PricingPlan {
   DateTime? createdAt;
   DateTime? updatedAt;
   String? updatedBy;
+  String? iosPlanId;
 
   PricingPlan({
     this.id,
@@ -110,6 +111,7 @@ class PricingPlan {
     this.createdAt,
     this.updatedAt,
     this.updatedBy,
+    this.iosPlanId,
   });
 
   PricingPlan copyWith({
@@ -132,6 +134,7 @@ class PricingPlan {
     DateTime? createdAt,
     DateTime? updatedAt,
     String? updatedBy,
+    String? iosPlanId,
   }) =>
       PricingPlan(
         id: id ?? this.id,
@@ -153,6 +156,7 @@ class PricingPlan {
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         updatedBy: updatedBy ?? this.updatedBy,
+        iosPlanId: iosPlanId ?? this.iosPlanId,
       );
 
   factory PricingPlan.fromRawJson(String str) => PricingPlan.fromJson(json.decode(str));
@@ -179,6 +183,7 @@ class PricingPlan {
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
     updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     updatedBy: json["updatedBy"],
+    iosPlanId: json["ios_plan_id"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -201,6 +206,7 @@ class PricingPlan {
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
     "updatedBy": updatedBy,
+    "ios_plan_id": iosPlanId,
   };
 }
 

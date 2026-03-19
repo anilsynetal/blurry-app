@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:blurry/core/services/binding.dart';
 import 'package:blurry/core/utils/export.dart';
@@ -10,10 +12,12 @@ import 'package:blurry/presentation/widgets/credit_widget.dart';
 import 'package:blurry/presentation/widgets/getx_message_toast.dart';
 import 'package:blurry/presentation/widgets/message_dialog.dart';
 import 'package:blurry/presentation/widgets/showErrorDialog.dart' show showErrorMessageDialog, showMessageDialog;
+import 'package:blurry/presentation/view/profile/controller/profile_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../../bottom_bar/bottom_bar.dart';
 import '../model/plan_model.dart';
@@ -32,6 +36,12 @@ class PricingController extends GetxController {
   RxBool isLoadingMore = false.obs;
   RxInt currentPage = 1.obs;
   RxInt totalPages = 1.obs;
+
+  final InAppPurchase _iap = InAppPurchase.instance;
+  List<ProductDetails> products = [];
+  StreamSubscription<List<PurchaseDetails>>? purchaseSub;
+  Set<String> productIds = {};
+  Rx<bool> iapInitialized = false.obs;
 
   @override
   Future<void> onInit() async {
@@ -62,7 +72,90 @@ class PricingController extends GetxController {
       Stripe.publishableKey = publishableKey.value;
       Stripe.merchantIdentifier = "IN";
     });
+  }
 
+  Future<void> initIap() async {
+    final available = await _iap.isAvailable();
+    if (!available) {
+      log("IAP not available");
+      return;
+    }
+    try {
+      final response = await _iap.queryProductDetails(productIds);
+      products = response.productDetails;
+      purchaseSub = _iap.purchaseStream.listen(_onPurchaseUpdate);
+    } catch (e) {
+      print("Debug error: $e");
+    }
+  }
+
+  void _onPurchaseUpdate(List<PurchaseDetails> purchases) async {
+    for (var purchase in purchases) {
+      if (purchase.status == PurchaseStatus.purchased) {
+        securePaymentLoading.value = true;
+        final receipt = purchase.verificationData.serverVerificationData;
+        
+        final selected = plans.firstWhereOrNull((plan) => plan.iosPlanId == purchase.productID);
+        
+        await sendReceiptToBackend(
+          receipt,
+          purchase.productID,
+          selected?.id ?? "",
+        );
+      }
+      if (purchase.pendingCompletePurchase) {
+        await _iap.completePurchase(purchase);
+      }
+    }
+  }
+
+  Future<void> startApplePurchase(PricingPlan plan) async {
+    final productId = plan.iosPlanId.toString();
+    final product = products.firstWhereOrNull(
+      (p) => p.id == productId,
+    );
+
+    if (product == null) {
+      showErrorMessageDialog("Product not found");
+      return;
+    }
+
+    final purchaseParam = PurchaseParam(productDetails: product);
+
+    await _iap.buyNonConsumable(purchaseParam: purchaseParam);
+  }
+
+  Future<void> sendReceiptToBackend(
+    String receipt,
+    String productId,
+    String normalSelectedPlanId,
+  ) async {
+    try {
+      await repository.verifyApplePayment({
+        "receiptData": receipt,
+        "iosProductId": productId,
+        "planId": normalSelectedPlanId,
+      });
+      final isSuccess = true;
+      if (isSuccess) {
+        if (Get.isRegistered<WalletController>()) {
+          Get.find<WalletController>().fetchWalletCredit();
+        }
+
+        if (Get.isRegistered<YourMatchController>()) {
+          Get.find<YourMatchController>().getMyActivePlanApi();
+        }
+        if (Get.isRegistered<ProfileController>()) {
+          Get.find<ProfileController>().getMyActivePlanApi();
+        }
+        showSuccessMessage('Payment completed successfully!');
+        securePaymentLoading.value = false;
+      }
+    } catch (e) {
+      showErrorMessageDialog(e.toString());
+    } finally {
+      securePaymentLoading.value = false;
+    }
   }
 
   Future<void> fetchPlans({bool loadMore = false}) async {
@@ -86,6 +179,18 @@ class PricingController extends GetxController {
         }
 
         plans.addAll(response.data!);
+        if (Platform.isIOS && !iapInitialized.value) {
+          productIds = plans
+              .where((e) => e.isFree == false)
+              .map((e) => e.iosPlanId.toString())
+              .toSet();
+
+          print("productIds is stored $productIds");
+
+          await initIap();
+
+          iapInitialized.value = true;
+        }
         currentPage.value = response.pagination!.currentPage ?? 1;
         totalPages.value = response.pagination!.totalPages ?? 1;
         await repository.getMyActivePlan().then((value) {
@@ -135,6 +240,8 @@ class PricingController extends GetxController {
 
     if (selected.price.toString() == "0") {
       planSubscribeZero(selected.id.toString(), "null", currentPayment.value);
+    } else if (Platform.isIOS) {
+      await startApplePurchase(selected);
     } else {
       try {
         securePaymentLoading.value = true;

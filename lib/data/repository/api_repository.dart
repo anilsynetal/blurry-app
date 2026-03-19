@@ -1048,6 +1048,20 @@ class ApiRepository {
 
     return response.data;
   }
+  Future<dynamic> verifyApplePayment(Map<String, dynamic> body) async {
+    final response = await dioClient.dio.patch(
+      "app/v1/payments/confirm-payment/ios",
+      data: body,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer ${GetStorage().read(tokenKey)}',
+          'accept': 'application/json',
+        },
+      ),
+    );
+
+    return response.data;
+  }
 
   Future<dynamic> logout() async {
     final response = await dioClient.dio.post(
